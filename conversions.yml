@@ -1,0 +1,45 @@
+m:
+  - unit: km
+    formula: magnitude * 1000
+  - unit: dm
+    formula: magnitude / 10
+  - unit: cm
+    formula: magnitude / 100
+  - unit: mm
+    formula: magnitude / 1000
+  - unit: µm
+    formula: magnitude / 1000000
+  - unit: nm
+    formula: magnitude / 1000000000
+  - unit: in
+    formula: magnitude * 0.0254
+  - unit: ft
+    formula: magnitude * 0.304800609601
+
+l:
+  - unit: dl
+    formula: magnitude / 10
+  - unit: cl
+    formula: magnitude / 100
+  - unit: ml
+    formula: magnitude / 1000
+  - unit: µl
+    formula: magnitude / 1000000
+  - unit: nl
+    formula: magnitude / 1000000000
+
+g:
+  - unit: kg
+    formula: magnitude / 10
+  - unit: mg
+    formula: magnitude / 1000
+  - unit: µg
+    formula: magnitude / 1000000
+  - unit: oz
+    formula: magnitude * 0.035274
+  - unit: lb
+    formula: magnitude * 0.00220462
+
+µg/l:
+  - unit: ng/ml
+    formula: magnitude

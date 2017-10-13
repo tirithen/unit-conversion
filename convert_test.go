@@ -1,0 +1,176 @@
+package main
+
+import (
+	"strings"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestConvertWithValidInput(test *testing.T) {
+	input := Quantity{Magnitude: 1100, Unit: "g"}
+	expectedOutput := Quantity{Magnitude: 1.1, Unit: "kg"}
+	conversion := Conversion{From: "g", To: "kg", Formula: "magnitude / 1000"}
+	output, err := Convert(input, conversion)
+
+	assert.NoError(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConvertWithUnitMismatch(test *testing.T) {
+	input := Quantity{Magnitude: 1100, Unit: "g"}
+	expectedOutput := Quantity{}
+	conversion := Conversion{From: "µg", To: "kg", Formula: "magnitude * 1000"}
+	output, err := Convert(input, conversion)
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConvertWithInvalidFormula(test *testing.T) {
+	input := Quantity{Magnitude: 1100, Unit: "g"}
+	expectedOutput := Quantity{}
+	conversion := Conversion{From: "g", To: "kg", Formula: "magnitude /**e2> 1000"}
+	output, err := Convert(input, conversion)
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConvertWithInvalidMagnitudeReference(test *testing.T) {
+	input := Quantity{Magnitude: 1100, Unit: "g"}
+	expectedOutput := Quantity{}
+	conversion := Conversion{From: "g", To: "kg", Formula: "badmagnitude * 1000"}
+	output, err := Convert(input, conversion)
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestConversionsFromYAML(test *testing.T) {
+	input := strings.NewReader(`
+    m:
+      - unit: km
+        formula: magnitude * 1000
+      - unit: dm
+        formula: magnitude / 10
+
+    l:
+      - unit: dl
+        formula: magnitude / 10
+      - unit: cl
+        formula: magnitude / 100
+  `)
+	expectedOutput := []Conversion{
+		Conversion{From: "l", To: "dl", Formula: "magnitude / 10"},
+		Conversion{From: "l", To: "cl", Formula: "magnitude / 100"},
+		Conversion{From: "m", To: "km", Formula: "magnitude * 1000"},
+		Conversion{From: "m", To: "dm", Formula: "magnitude / 10"},
+	}
+	output, err := ConversionsFromYAML(input)
+
+	assert.NoError(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConversionsFromYAMLWithBadYaml(test *testing.T) {
+	input := strings.NewReader(`
+    m:2#¤234
+      - unit: km
+        formula
+  `)
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestFailConversionsFromYAMLWithRootAsList(test *testing.T) {
+	input := strings.NewReader("- m\n- l")
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestFailConversionsFromYAMLWithMissingPossibleConversions(test *testing.T) {
+	input := strings.NewReader(`
+    m:
+      - unit: km
+        formula: magnitude * 1000
+      - unit: dm
+        formula: magnitude / 10
+
+    l:
+			bad: 12
+  `)
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
+	input := strings.NewReader(`
+    m:
+      - unit
+  `)
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestFailConversionsFromYAMLWithMissingPossibleConversionUnit(test *testing.T) {
+	input := strings.NewReader(`
+    m:
+      - formula: magnitude * 1000
+      - unit: dm
+        formula: magnitude / 10
+  `)
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestFailConversionsFromYAMLWithMissingPossibleConversionFormula(test *testing.T) {
+	input := strings.NewReader(`
+    m:
+      - unit: km
+        formula: magnitude * 1000
+      - unit: dm
+  `)
+	output, err := ConversionsFromYAML(input)
+
+	assert.Error(test, err)
+	assert.Empty(test, output)
+}
+
+func TestConvertToFirstOption(test *testing.T) {
+	conversions := []Conversion{
+		Conversion{From: "l", To: "dl", Formula: "magnitude / 10"},
+		Conversion{From: "kg", To: "g", Formula: "magnitude * 1000"},
+		Conversion{From: "l", To: "cl", Formula: "magnitude / 100"},
+	}
+	input := Quantity{Magnitude: 3.54, Unit: "kg"}
+	expectedOutput := Quantity{Magnitude: 3540, Unit: "g"}
+	output, err := ConvertToFirstOption(input, conversions)
+
+	assert.NoError(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConvertToFirstOptionMissingConversion(test *testing.T) {
+	conversions := []Conversion{
+		Conversion{From: "l", To: "dl", Formula: "magnitude / 10"},
+		Conversion{From: "kg", To: "g", Formula: "magnitude * 1000"},
+		Conversion{From: "l", To: "cl", Formula: "magnitude / 100"},
+	}
+	input := Quantity{Magnitude: 4.35, Unit: "km"}
+	expectedOutput := Quantity{}
+	output, err := ConvertToFirstOption(input, conversions)
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
