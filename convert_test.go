@@ -1,7 +1,6 @@
 package main
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -48,24 +47,79 @@ func TestFailConvertWithInvalidMagnitudeReference(test *testing.T) {
 }
 
 func TestConversionsFromYAML(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:
       - unit: km
-        formula: magnitude * 1000
+				formula: magnitude * 1000
+				testFixtures:
+		      - input: 1000
+		        expected: 1
+
       - unit: dm
+				bad: hello
         formula: magnitude / 10
+				testFixtures:
+		      - input: 1
+		        expected: 10
 
     l:
       - unit: dl
         formula: magnitude / 10
+				testFixtures:
+		      - input: 1
+		        expected: 10
+
       - unit: cl
         formula: magnitude / 100
-  `)
+				testFixtures:
+		      - input: 1
+		        expected: 100
+  `
 	expectedOutput := []Conversion{
-		Conversion{From: "l", To: "dl", Formula: "magnitude / 10"},
-		Conversion{From: "l", To: "cl", Formula: "magnitude / 100"},
-		Conversion{From: "m", To: "km", Formula: "magnitude * 1000"},
-		Conversion{From: "m", To: "dm", Formula: "magnitude / 10"},
+		Conversion{
+			From:    "l",
+			To:      "dl",
+			Formula: "magnitude / 10",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1,
+					Expected: 10,
+				},
+			},
+		},
+		Conversion{
+			From:    "l",
+			To:      "cl",
+			Formula: "magnitude / 100",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1,
+					Expected: 100,
+				},
+			},
+		},
+		Conversion{
+			From:    "m",
+			To:      "km",
+			Formula: "magnitude * 1000",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1000,
+					Expected: 1,
+				},
+			},
+		},
+		Conversion{
+			From:    "m",
+			To:      "dm",
+			Formula: "magnitude / 10",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1,
+					Expected: 10,
+				},
+			},
+		},
 	}
 	output, err := ConversionsFromYAML(input)
 
@@ -74,11 +128,15 @@ func TestConversionsFromYAML(test *testing.T) {
 }
 
 func TestFailConversionsFromYAMLWithBadYaml(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:2#¤234
       - unit: km
         formula
-  `)
+				testFixtures:
+		      - input: 1
+		        expected: 10
+
+  `
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
@@ -86,7 +144,7 @@ func TestFailConversionsFromYAMLWithBadYaml(test *testing.T) {
 }
 
 func TestFailConversionsFromYAMLWithRootAsList(test *testing.T) {
-	input := strings.NewReader("- m\n- l")
+	input := "- m\n- l"
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
@@ -94,16 +152,23 @@ func TestFailConversionsFromYAMLWithRootAsList(test *testing.T) {
 }
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversions(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:
       - unit: km
         formula: magnitude * 1000
+				testFixtures:
+		      - input: 1
+		        expected: 10
+
       - unit: dm
         formula: magnitude / 10
+				testFixtures:
+		      - input: 1
+		        expected: 10
 
     l:
 			bad: 12
-  `)
+  `
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
@@ -111,10 +176,10 @@ func TestFailConversionsFromYAMLWithMissingPossibleConversions(test *testing.T) 
 }
 
 func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:
       - unit
-  `)
+  `
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
@@ -122,12 +187,19 @@ func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
 }
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversionUnit(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:
       - formula: magnitude * 1000
+				testFixtures:
+					- input: 1
+						expected: 10
+
       - unit: dm
         formula: magnitude / 10
-  `)
+				testFixtures:
+		      - input: 1
+		        expected: 10
+  `
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
@@ -135,12 +207,19 @@ func TestFailConversionsFromYAMLWithMissingPossibleConversionUnit(test *testing.
 }
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversionFormula(test *testing.T) {
-	input := strings.NewReader(`
+	input := `
     m:
       - unit: km
         formula: magnitude * 1000
+				testFixtures:
+		      - input: 1
+		        expected: 10
+
       - unit: dm
-  `)
+				testFixtures:
+					- input: 1
+						expected: 10
+  `
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
