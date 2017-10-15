@@ -1,0 +1,13 @@
+{
+  "demographic": {
+    "name": "Lei"
+  },
+  "height": {
+    "magnitude": 1.524,
+    "unit": "m"
+  },
+  "weight": {
+    "magnitude": 70000,
+    "unit": "g"
+  }
+}
