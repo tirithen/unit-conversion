@@ -36,16 +36,16 @@ m:
         expected: 1000000000
 
   - unit: in
-    formula: magnitude / 0.0254
+    formula: magnitude * 39.3700787
     testFixtures:
       - input: 1
-        expected: 254
+        expected: 39.3700787
 
   - unit: ft
-    formula: magnitude / 0.304800609601
+    formula: magnitude * 3.2808399
     testFixtures:
-      - input: 1000
-        expected: 3.04800609601
+      - input: 1
+        expected: 3.2808399
 
 l:
   - unit: dl
@@ -89,25 +89,25 @@ g:
     formula: magnitude * 1000
     testFixtures:
       - input: 1
-        expected: 10
+        expected: 1000
 
   - unit: µg
     formula: magnitude * 1000000
     testFixtures:
       - input: 1
-        expected: 10
+        expected: 1000000
 
   - unit: oz
-    formula: magnitude / 0.035274
+    formula: magnitude * 0.0352739619
     testFixtures:
       - input: 1
-        expected: 10
+        expected: 0.0352739619
 
   - unit: lb
-    formula: magnitude / 0.00220462
+    formula: magnitude * 0.00220462262
     testFixtures:
       - input: 1
-        expected: 10
+        expected: 0.00220462262
 
 µg/l:
   - unit: ng/ml

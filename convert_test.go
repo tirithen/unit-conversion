@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io/ioutil"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -326,4 +327,14 @@ func TestFailConvertToFirstOptionMissingConversion(test *testing.T) {
 
 	assert.Error(test, err)
 	assert.Equal(test, expectedOutput, output)
+}
+
+func TestConversionsDefinitionYAML(test *testing.T) {
+	raw, err := ioutil.ReadFile("conversions.yml")
+	assert.NoError(test, err)
+
+	conversions, err := ConversionsFromYAML(string(raw))
+	assert.NoError(test, err)
+
+	assert.True(test, len(conversions) > 10)
 }
