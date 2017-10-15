@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"sort"
 
 	govaluate "gopkg.in/Knetic/govaluate.v2"
+	validator "gopkg.in/go-playground/validator.v9"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -21,16 +23,17 @@ type ConversionTestFixture struct {
 
 // Conversion defines properties that describes how a value with one unit can be converted into a value in another unit with a formula
 type Conversion struct {
-	From         string
-	To           string
-	Formula      string
-	TestFixtures []ConversionTestFixture
+	From         string                  `validate:"required"`
+	To           string                  `validate:"required"`
+	Formula      string                  `validate:"required"`
+	TestFixtures []ConversionTestFixture `validate:"required,dive,required"`
 }
 
-// TestFormula runs the conversion with all defined test fixtures to verify that the conversion returnes the values expected
-func (conversion Conversion) TestFormula() (err error) {
-	if len(conversion.TestFixtures) < 1 {
-		err = fmt.Errorf("Conversion from %q to %q with formula %q does not have any testFixtures", conversion.From, conversion.To, conversion.Formula)
+// Test runs the conversion with all defined test fixtures to verify that the conversion returnes the values expected
+func (conversion Conversion) Test() (err error) {
+	validate := validator.New()
+	err = validate.Struct(conversion)
+	if err != nil {
 		return
 	}
 
@@ -93,38 +96,34 @@ func ConversionsFromYAML(raw string) (conversions []Conversion, err error) {
 		return
 	}
 
-	for from := range conversionGroups {
-		conversionGroup := conversionGroups[from]
+	units := make([]string, 0, len(conversionGroups))
+	for unit := range conversionGroups {
+		units = append(units, unit)
+	}
+	sort.Strings(units)
+
+	for _, unit := range units {
+		conversionGroup := conversionGroups[unit]
 		for index := range conversionGroup {
 			conversionGroupVariant := conversionGroup[index]
 
 			conversion := Conversion{
-				From:         from,
+				From:         unit,
 				To:           conversionGroupVariant.Unit,
 				Formula:      conversionGroupVariant.Formula,
 				TestFixtures: conversionGroupVariant.TestFixtures,
+			}
+
+			err = conversion.Test()
+			if err != nil {
+				conversions = []Conversion{}
+				return
 			}
 
 			conversions = append(conversions, conversion)
 		}
 	}
 
-	/*
-		for key := range defaultMeasurements {
-
-
-				conversion := Conversion{From: defaultMeasurements[key], To: unit.String(), Formula: formula.String()}
-
-				err = conversion.TestFormula()
-				if err != nil {
-					conversions = []Conversion{}
-					return
-				}
-
-				conversions = append(conversions, conversion)
-			}
-		}
-	*/
 	return
 }
 

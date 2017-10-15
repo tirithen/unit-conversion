@@ -1,6 +1,6 @@
 m:
   - unit: km
-    formula: magnitude * 1000
+    formula: magnitude / 1000
     testFixtures:
       - input: 1000
         expected: 1
