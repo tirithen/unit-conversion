@@ -81,11 +81,14 @@ func (conversion *Conversion) Convert(input Quantity) (output Quantity, err erro
 	return
 }
 
+// Converter allows for a Quantity to be converted in between different units
 type Converter struct {
-	Conversions []Conversion
-	PathCache   map[string][]*Conversion
+	InternalUnits []string     `yaml:"internalUnits"`
+	Conversions   []Conversion `yaml:"conversions"`
+	PathCache     map[string][]*Conversion
 }
 
+// Test tests that the converter and all it's conversions are in a good state
 func (converter *Converter) Test() (err error) {
 	for index := range converter.Conversions {
 		err = converter.Conversions[index].Test()
@@ -152,6 +155,7 @@ func (converter *Converter) getPath(from string, to string, previousPath []*Conv
 	return
 }
 
+// Convert finds a conversion path and converts a Quantity if possible
 func (converter *Converter) Convert(input Quantity, to string) (output Quantity, err error) {
 	path, err := converter.getPath(input.Unit, to, []*Conversion{})
 	if err != nil {
@@ -170,8 +174,9 @@ func (converter *Converter) Convert(input Quantity, to string) (output Quantity,
 	return
 }
 
+// NewConverterFromYAML is used to parse and verify YAML data into a Converter
 func NewConverterFromYAML(raw []byte) (converter Converter, err error) {
-	err = yaml.Unmarshal(raw, &converter.Conversions)
+	err = yaml.Unmarshal(raw, &converter)
 	if err != nil {
 		converter = Converter{}
 		return

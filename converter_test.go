@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewConverterFromYAML(test *testing.T) {
-	raw, err := ioutil.ReadFile("conversions.yml")
+	raw, err := ioutil.ReadFile("converter.yml")
 	assert.NoError(test, err)
 
 	converter, err := NewConverterFromYAML(raw)
@@ -19,7 +19,7 @@ func TestNewConverterFromYAML(test *testing.T) {
 
 func TestConverterConvert(test *testing.T) {
 
-	raw, err := ioutil.ReadFile("conversions.yml")
+	raw, err := ioutil.ReadFile("converter.yml")
 	assert.NoError(test, err)
 
 	converter, err := NewConverterFromYAML(raw)
@@ -39,7 +39,7 @@ func TestConverterConvert(test *testing.T) {
 }
 
 func TestFailConversionConverterConvertWithMissingConversion(test *testing.T) {
-	raw, err := ioutil.ReadFile("conversions.yml")
+	raw, err := ioutil.ReadFile("converter.yml")
 	assert.NoError(test, err)
 
 	converter, err := NewConverterFromYAML(raw)
@@ -53,7 +53,7 @@ func TestFailConversionConverterConvertWithMissingConversion(test *testing.T) {
 }
 
 func TestFailConversionConverterConvertWithBadConversion(test *testing.T) {
-	raw, err := ioutil.ReadFile("conversions.yml")
+	raw, err := ioutil.ReadFile("converter.yml")
 	assert.NoError(test, err)
 
 	converter, err := NewConverterFromYAML(raw)
@@ -210,19 +210,20 @@ func TestFailsConverterConvertWithBadConverions(test *testing.T) {
 
 func TestConversionsFromYAML(test *testing.T) {
 	input := `
-- from: m
-  to: km
-  formula: magnitude * 1000
-  testFixtures:
-    - input: 1
-      expected: 1000
+conversions:
+  - from: m
+    to: km
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 1000
 
-- from: km
-  to: m
-  formula: magnitude / 1000
-  testFixtures:
-    - input: 1000
-      expected: 1
+  - from: km
+    to: m
+    formula: magnitude / 1000
+    testFixtures:
+      - input: 1000
+        expected: 1
 `
 
 	expectedOutput := Converter{
@@ -259,19 +260,20 @@ func TestConversionsFromYAML(test *testing.T) {
 
 func TestFailConversionsFromYAMLWithBadFormula(test *testing.T) {
 	input := `
-- from: m
-  to: km
-  formula: magnitude "#%"* 1000
-  testFixtures:
-    - input: 1
-      expected: 1000
+conversions:
+  - from: m
+    to: km
+    formula: magnitude "#%"* 1000
+    testFixtures:
+      - input: 1
+        expected: 1000
 
-- from: km
-  to: m
-  formula: magnitude / 1000
-  testFixtures:
-    - input: 1000
-      expected: 1
+  - from: km
+    to: m
+    formula: magnitude / 1000
+    testFixtures:
+      - input: 1000
+        expected: 1
 `
 
 	expectedOutput := Converter{}
