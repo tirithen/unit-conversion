@@ -108,8 +108,8 @@ func ConversionsFromYAML(raw string) (conversions []Conversion, err error) {
 			conversionGroupVariant := conversionGroup[index]
 
 			conversion := Conversion{
-				From:         unit,
-				To:           conversionGroupVariant.Unit,
+				From:         conversionGroupVariant.Unit,
+				To:           unit,
 				Formula:      conversionGroupVariant.Formula,
 				TestFixtures: conversionGroupVariant.TestFixtures,
 			}
