@@ -47,34 +47,33 @@ func TestFailConvertWithInvalidMagnitudeReference(test *testing.T) {
 }
 
 func TestConversionsFromYAML(test *testing.T) {
-	input := `
-    m:
-      - unit: km
-				formula: magnitude * 1000
-				testFixtures:
-		      - input: 1000
-		        expected: 1
+	input := `m:
+  - unit: km
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1000
+        expected: 1
 
-      - unit: dm
-				bad: hello
-        formula: magnitude / 10
-				testFixtures:
-		      - input: 1
-		        expected: 10
+  - unit: dm
+    bad: hello
+    formula: magnitude / 10
+    testFixtures:
+      - input: 1
+        expected: 10
 
-    l:
-      - unit: dl
-        formula: magnitude / 10
-				testFixtures:
-		      - input: 1
-		        expected: 10
+l:
+  - unit: dl
+    formula: magnitude / 10
+    testFixtures:
+      - input: 1
+        expected: 10
 
-      - unit: cl
-        formula: magnitude / 100
-				testFixtures:
-		      - input: 1
-		        expected: 100
-  `
+  - unit: cl
+    formula: magnitude / 100
+    testFixtures:
+      - input: 1
+        expected: 100`
+
 	expectedOutput := []Conversion{
 		Conversion{
 			From:    "l",
@@ -129,13 +128,12 @@ func TestConversionsFromYAML(test *testing.T) {
 
 func TestFailConversionsFromYAMLWithBadYaml(test *testing.T) {
 	input := `
-    m:2#¤234
-      - unit: km
-        formula
-				testFixtures:
-		      - input: 1
-		        expected: 10
-
+m:2#¤234
+  - unit: km
+    formula
+    testFixtures:
+      - input: 1
+        expected: 10
   `
 	output, err := ConversionsFromYAML(input)
 
@@ -153,21 +151,21 @@ func TestFailConversionsFromYAMLWithRootAsList(test *testing.T) {
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversions(test *testing.T) {
 	input := `
-    m:
-      - unit: km
-        formula: magnitude * 1000
-				testFixtures:
-		      - input: 1
-		        expected: 10
+m:
+  - unit: km
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 10
 
-      - unit: dm
-        formula: magnitude / 10
-				testFixtures:
-		      - input: 1
-		        expected: 10
+  - unit: dm
+    formula: magnitude / 10
+    testFixtures:
+      - input: 1
+        expected: 10
 
-    l:
-			bad: 12
+l:
+  bad: 12
   `
 	output, err := ConversionsFromYAML(input)
 
@@ -177,8 +175,8 @@ func TestFailConversionsFromYAMLWithMissingPossibleConversions(test *testing.T) 
 
 func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
 	input := `
-    m:
-      - unit
+m:
+  - unit
   `
 	output, err := ConversionsFromYAML(input)
 
@@ -188,17 +186,17 @@ func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversionUnit(test *testing.T) {
 	input := `
-    m:
-      - formula: magnitude * 1000
-				testFixtures:
-					- input: 1
-						expected: 10
+m:
+  - formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 10
 
-      - unit: dm
-        formula: magnitude / 10
-				testFixtures:
-		      - input: 1
-		        expected: 10
+  - unit: dm
+    formula: magnitude / 10
+    testFixtures:
+      - input: 1
+        expected: 10
   `
 	output, err := ConversionsFromYAML(input)
 
@@ -208,17 +206,18 @@ func TestFailConversionsFromYAMLWithMissingPossibleConversionUnit(test *testing.
 
 func TestFailConversionsFromYAMLWithMissingPossibleConversionFormula(test *testing.T) {
 	input := `
-    m:
-      - unit: km
-        formula: magnitude * 1000
-				testFixtures:
-		      - input: 1
-		        expected: 10
+m:
+  - unit: km
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 10
 
-      - unit: dm
-				testFixtures:
-					- input: 1
-						expected: 10
+l:
+  - unit: dm
+    testFixtures:
+      - input: 1
+        expected: 10
   `
 	output, err := ConversionsFromYAML(input)
 

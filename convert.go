@@ -81,23 +81,33 @@ func Convert(input Quantity, conversion Conversion) (output Quantity, err error)
 
 // ConversionsFromYAML reads a YAML stream and returns a slice of conversions
 func ConversionsFromYAML(raw string) (conversions []Conversion, err error) {
-	type conversionGroup struct {
+	type conversionGroupYAML struct {
 		Unit         string                  `yaml:"unit"`
 		Formula      string                  `yaml:"formula"`
 		TestFixtures []ConversionTestFixture `yaml:"testFixtures"`
 	}
-	conversionGroups := make(map[string]conversionGroup)
-
-	fmt.Println("conversionGroups", conversionGroups)
-	raw = "m:\n  - unit: km\n    formula: magnitude / 1000\n    testFixture:\n      - input: 1000\n        expected: 1"
-	fmt.Println(raw)
+	conversionGroups := make(map[string][]conversionGroupYAML)
 
 	err = yaml.Unmarshal([]byte(raw), &conversionGroups)
 	if err != nil {
 		return
 	}
 
-	fmt.Println("conversionGroups", conversionGroups)
+	for from := range conversionGroups {
+		conversionGroup := conversionGroups[from]
+		for index := range conversionGroup {
+			conversionGroupVariant := conversionGroup[index]
+
+			conversion := Conversion{
+				From:         from,
+				To:           conversionGroupVariant.Unit,
+				Formula:      conversionGroupVariant.Formula,
+				TestFixtures: conversionGroupVariant.TestFixtures,
+			}
+
+			conversions = append(conversions, conversion)
+		}
+	}
 
 	/*
 		for key := range defaultMeasurements {
