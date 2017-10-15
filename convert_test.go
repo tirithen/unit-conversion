@@ -47,7 +47,8 @@ func TestFailConvertWithInvalidMagnitudeReference(test *testing.T) {
 }
 
 func TestConversionsFromYAML(test *testing.T) {
-	input := `m:
+	input := `
+m:
   - unit: km
     formula: magnitude * 1000
     testFixtures:
@@ -72,31 +73,10 @@ l:
     formula: magnitude / 100
     testFixtures:
       - input: 1
-        expected: 100`
+        expected: 100
+`
 
 	expectedOutput := []Conversion{
-		Conversion{
-			From:    "l",
-			To:      "dl",
-			Formula: "magnitude / 10",
-			TestFixtures: []ConversionTestFixture{
-				ConversionTestFixture{
-					Input:    1,
-					Expected: 10,
-				},
-			},
-		},
-		Conversion{
-			From:    "l",
-			To:      "cl",
-			Formula: "magnitude / 100",
-			TestFixtures: []ConversionTestFixture{
-				ConversionTestFixture{
-					Input:    1,
-					Expected: 100,
-				},
-			},
-		},
 		Conversion{
 			From:    "m",
 			To:      "km",
@@ -116,6 +96,28 @@ l:
 				ConversionTestFixture{
 					Input:    1,
 					Expected: 10,
+				},
+			},
+		},
+		Conversion{
+			From:    "l",
+			To:      "dl",
+			Formula: "magnitude / 10",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1,
+					Expected: 10,
+				},
+			},
+		},
+		Conversion{
+			From:    "l",
+			To:      "cl",
+			Formula: "magnitude / 100",
+			TestFixtures: []ConversionTestFixture{
+				ConversionTestFixture{
+					Input:    1,
+					Expected: 100,
 				},
 			},
 		},
@@ -174,10 +176,7 @@ l:
 }
 
 func TestFailConversionsFromYAMLWithBadConversionFormat(test *testing.T) {
-	input := `
-m:
-  - unit
-  `
+	input := "m:\n  - unit"
 	output, err := ConversionsFromYAML(input)
 
 	assert.Error(test, err)
