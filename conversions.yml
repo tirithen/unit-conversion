@@ -1,117 +1,127 @@
-m:
-  - unit: km
-    formula: magnitude * 1000
-    testFixtures:
-      - input: 1
-        expected: 1000
+# Length/distance
 
-  - unit: dm
-    formula: magnitude / 10
-    testFixtures:
-      - input: 10
-        expected: 1
+- from: m
+  to: km
+  formula: magnitude * 1000
+  testFixtures:
+    - input: 1
+      expected: 1000
 
-  - unit: cm
-    formula: magnitude / 100
-    testFixtures:
-      - input: 100
-        expected: 1
+- from: km
+  to: m
+  formula: magnitude / 1000
+  testFixtures:
+    - input: 1000
+      expected: 1
 
-  - unit: mm
-    formula: magnitude / 1000
-    testFixtures:
-      - input: 1000
-        expected: 1
+- from: m
+  to: dm
+  formula: magnitude * 10
+  testFixtures:
+    - input: 1
+      expected: 10
 
-  - unit: µm
-    formula: magnitude / 1000000
-    testFixtures:
-      - input: 1000000
-        expected: 1
+- from: dm
+  to: m
+  formula: magnitude / 10
+  testFixtures:
+    - input: 10
+      expected: 1
 
-  - unit: nm
-    formula: magnitude / 1000000000
-    testFixtures:
-      - input: 1000000000
-        expected: 1
+- from: m
+  to: cm
+  formula: magnitude * 100
+  testFixtures:
+    - input: 1
+      expected: 100
 
-  - unit: in
-    formula: magnitude * 0.0254
-    testFixtures:
-      - input: 100
-        expected: 2.54
+- from: cm
+  to: m
+  formula: magnitude / 100
+  testFixtures:
+    - input: 100
+      expected: 1
 
-  - unit: ft
-    formula: magnitude * 0.3048
-    testFixtures:
-      - input: 100
-        expected: 30.48
+- from: m
+  to: mm
+  formula: magnitude * 1000
+  testFixtures:
+    - input: 1
+      expected: 1000
 
-l:
-  - unit: dl
-    formula: magnitude / 10
-    testFixtures:
-      - input: 10
-        expected: 1
+- from: mm
+  to: m
+  formula: magnitude / 1000
+  testFixtures:
+    - input: 1000
+      expected: 1
 
-  - unit: cl
-    formula: magnitude / 100
-    testFixtures:
-      - input: 100
-        expected: 1
+- from: m
+  to: µm
+  formula: magnitude * 1000000
+  testFixtures:
+    - input: 1
+      expected: 1000000
 
-  - unit: ml
-    formula: magnitude / 1000
-    testFixtures:
-      - input: 1000
-        expected: 1
+- from: µm
+  to: m
+  formula: magnitude / 1000000
+  testFixtures:
+    - input: 1000000
+      expected: 1
 
-  - unit: µl
-    formula: magnitude / 1000000
-    testFixtures:
-      - input: 1000000
-        expected: 1
+- from: m
+  to: nm
+  formula: magnitude * 1000000000
+  testFixtures:
+    - input: 1
+      expected: 1000000000
 
-  - unit: nl
-    formula: magnitude / 1000000000
-    testFixtures:
-      - input: 1000000000
-        expected: 1
+- from: nm
+  to: m
+  formula: magnitude / 1000000000
+  testFixtures:
+    - input: 1000000000
+      expected: 1
 
-g:
-  - unit: kg
-    formula: magnitude * 1000
-    testFixtures:
-      - input: 1
-        expected: 1000
+- from: m
+  to: in
+  formula: magnitude * 39.3700787
+  testFixtures:
+    - input: 1
+      expected: 39.3700787
 
-  - unit: mg
-    formula: magnitude / 1000
-    testFixtures:
-      - input: 1000
-        expected: 1
+- from: in
+  to: m
+  formula: magnitude * 0.0254
+  testFixtures:
+    - input: 1
+      expected: 0.0254
 
-  - unit: µg
-    formula: magnitude / 1000000
-    testFixtures:
-      - input: 1000000
-        expected: 1
+- from: m
+  to: ft
+  formula: magnitude * 3.2808399
+  testFixtures:
+    - input: 1
+      expected: 3.2808399
 
-  - unit: oz
-    formula: magnitude * 28.3495231
-    testFixtures:
-      - input: 1
-        expected: 28.3495231
+- from: ft
+  to: m
+  formula: magnitude * 0.3048
+  testFixtures:
+    - input: 1
+      expected: 0.3048
 
-  - unit: lb
-    formula: magnitude * 453.59237
-    testFixtures:
-      - input: 1
-        expected: 453.59237
+- from: µg/l
+  to: ng/ml
+  formula: magnitude
+  testFixtures:
+    - input: 1
+      expected: 1
 
-µg/l:
-  - unit: ng/ml
-    formula: magnitude
-    testFixtures:
-      - input: 1
-        expected: 1
+- from: ng/ml
+  to: µg/l
+  formula: magnitude
+  testFixtures:
+    - input: 1
+      expected: 1
