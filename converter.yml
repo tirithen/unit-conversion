@@ -1,10 +1,13 @@
-internalUnits:
+preferredUnits:
   - m
   - l
   - g
   - µg/l
 
 conversions:
+
+  # Length units
+
   - from: m
     to: km
     formula: magnitude * 1000
@@ -116,6 +119,66 @@ conversions:
     testFixtures:
       - input: 1
         expected: 0.3048
+
+  # Weight units
+
+  - from: kg
+    to: g
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 1000
+
+  - from: g
+    to: kg
+    formula: magnitude / 1000
+    testFixtures:
+      - input: 1000
+        expected: 1
+
+  - from: g
+    to: mg
+    formula: magnitude * 1000
+    testFixtures:
+      - input: 1
+        expected: 1000
+
+  - from: mg
+    to: g
+    formula: magnitude / 1000
+    testFixtures:
+      - input: 1000
+        expected: 1
+
+  - from: g
+    to: µg
+    formula: magnitude * 1000000
+    testFixtures:
+      - input: 1
+        expected: 1000000
+
+  - from: µg
+    to: g
+    formula: magnitude / 1000000
+    testFixtures:
+      - input: 1000000
+        expected: 1
+
+  - from: g
+    to: lb
+    formula: magnitude * 0.00220462262
+    testFixtures:
+      - input: 1
+        expected: 0.00220462262
+
+  - from: lb
+    to: g
+    formula: magnitude * 453.59237
+    testFixtures:
+      - input: 1
+        expected: 453.59237
+
+  # Weight/volume units
 
   - from: µg/l
     to: ng/ml

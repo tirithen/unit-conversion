@@ -83,9 +83,9 @@ func (conversion *Conversion) Convert(input Quantity) (output Quantity, err erro
 
 // Converter allows for a Quantity to be converted in between different units
 type Converter struct {
-	InternalUnits []string     `yaml:"internalUnits"`
-	Conversions   []Conversion `yaml:"conversions"`
-	PathCache     map[string][]*Conversion
+	PreferredUnits []string     `yaml:"preferredUnits"`
+	Conversions    []Conversion `yaml:"conversions"`
+	PathCache      map[string][]*Conversion
 }
 
 // Test tests that the converter and all it's conversions are in a good state
@@ -170,6 +170,26 @@ func (converter *Converter) Convert(input Quantity, to string) (output Quantity,
 			return
 		}
 	}
+
+	return
+}
+
+// ConvertToPreferredUnit works as Convert but selects the to unit from the Converter.PreferredUnits list
+func (converter *Converter) ConvertToPreferredUnit(input Quantity) (output Quantity, err error) {
+	to := ""
+	for _, preferredUnit := range converter.PreferredUnits {
+		_, pathError := converter.getPath(input.Unit, preferredUnit, []*Conversion{})
+		if pathError == nil {
+			to = preferredUnit
+		}
+	}
+
+	if to == "" {
+		err = fmt.Errorf("Unable to find a preferred unit for %q, conversion not possible", input.Unit)
+		return
+	}
+
+	output, err = converter.Convert(input, to)
 
 	return
 }
