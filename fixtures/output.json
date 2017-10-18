@@ -2,12 +2,20 @@
   "demographic": {
     "name": "Lei"
   },
-  "height": {
-    "magnitude": 1.524,
-    "unit": "m"
-  },
-  "weight": {
-    "magnitude": 70000,
-    "unit": "g"
+  "measurements": {
+    "height": {
+      "magnitude": 1.524,
+      "unit": "m"
+    },
+    "weight": [
+      {
+        "magnitude": 70000,
+        "unit": "g"
+      },
+      {
+        "magnitude": 71600,
+        "unit": "g"
+      }
+    ]
   }
 }
