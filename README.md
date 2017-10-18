@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/mojlighetsministeriet/identity-provider.svg?branch=master)](https://travis-ci.org/mojlighetsministeriet/identity-provider)
+[![Build Status](https://travis-ci.org/tirithen/unit-conversion.svg?branch=master)](https://travis-ci.org/tirithen/unit-conversion)
 
-[![Coverage Status](https://coveralls.io/repos/github/mojlighetsministeriet/identity-provider/badge.svg?branch=master)](https://coveralls.io/github/mojlighetsministeriet/identity-provider?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/tirithen/unit-conversion/badge.svg?branch=master)](https://coveralls.io/github/tirithen/unit-conversion?branch=master)
 
 # unit-conversion
 
