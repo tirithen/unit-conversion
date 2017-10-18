@@ -10,6 +10,7 @@ A configurable HTTP service and a Go package that allows for conversion between 
 
 ## Philosophy
 
+* Don't hesitate to send a pull request, be it for new units or to improve the service it self.
 * Ease of use, starting the service and sending a HTTP POST request with any JSON data should be enough to use the service.
 * Sane defaults, the service should always start without any specific configurations, where needed good default values should be set.
 * This service main goal is to provide a Docker packaged HTTP service, the Go package is nice and should have good interfaces but is second in priority.
@@ -127,3 +128,7 @@ Each time the service starts (or in Go when NewConverterFromYAML is called) all 
 If you want to convert in between cm and in and there are no no direct conversion defined but there is a conversion from cm to m and from m to in the service will automatically find that path and convert the amount of times that is needed to reach the final unit.
 
 This way it's enough to add one conversion in each direction against one of the units in preferredUnits to "hook" that unit into the chain.
+
+## Why does it just convert JSON of this specific format?
+
+Simply because that was the only initial need, it would be super great to see this extended for more content types like free text, XML, YAML, you name it. :)
