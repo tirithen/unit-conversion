@@ -21,8 +21,6 @@ The docker image is available here https://hub.docker.com/r/tirithen/unit-conver
 
 ## Try it out (HTTP version)
 
-**Note:** HTTP service has yet to be fully completed
-
 Send any JSON structure in a POST request, any object that has both magnitude and unit will have those values converted and updated in the response.
 
     $ docker run -p 8080:8080 --name unit-conversion -d tirithen/unit-conversion
