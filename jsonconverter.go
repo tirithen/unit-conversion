@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 
 	"github.com/tidwall/sjson"
@@ -61,13 +60,10 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 		}
 
 		if hasMagnitude && hasUnit {
-			fmt.Println(converter.PreferredUnits)
 			convertedQuantity, err := converter.ConvertToPreferredUnit(quantity)
 
 			if err == nil {
-				fmt.Println(path+".magUnitnitude", convertedQuantity.Magnitude)
-				fmt.Println(path+".unit", convertedQuantity.Unit)
-				output, err := sjson.Set(output, path+".magnitude", convertedQuantity.Magnitude)
+				output, err = sjson.Set(output, path+".magnitude", convertedQuantity.Magnitude)
 				if err != nil {
 					errors = append(errors, err)
 				}
@@ -75,7 +71,6 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 				if err != nil {
 					errors = append(errors, err)
 				}
-				fmt.Println("updated quantity", output)
 			} else {
 				errors = append(errors, err)
 			}
