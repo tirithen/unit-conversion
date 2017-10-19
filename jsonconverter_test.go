@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"testing"
 
@@ -16,7 +17,7 @@ func TestJSONConverterConvertToPreferredUnits(test *testing.T) {
 	assert.NoError(test, err)
 	converter, err := NewJSONConverterFromYAML(converterConfig)
 	assert.NoError(test, err)
-
+	fmt.Println("converter in test", converter)
 	output, errors := converter.ConvertToPreferredUnits(string(input))
 	assert.Empty(test, errors)
 	assert.JSONEq(test, string(expectedOutput), output)
