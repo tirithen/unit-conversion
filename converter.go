@@ -29,12 +29,6 @@ type Conversion struct {
 	TestFixtures      []ConversionTestFixture        `yaml:"testFixtures" validate:"required,dive,required"`
 }
 
-// Setup should be run before using a Conversion
-func (conversion *Conversion) Setup() (err error) {
-	err = conversion.createExpressionFromFormula()
-	return
-}
-
 func (conversion *Conversion) createExpressionFromFormula() (err error) {
 	expression, err := govaluate.NewEvaluableExpression(conversion.Formula)
 	if err != nil {
@@ -107,14 +101,9 @@ type Converter struct {
 	PathCache      map[string][]*Conversion
 }
 
-// SetupAndTest prepares each Conversion and tests that the converter and all it's conversions are in a good state
-func (converter *Converter) SetupAndTest() (err error) {
+// Test tests that the converter and all it's conversions are in a good state
+func (converter *Converter) Test() (err error) {
 	for index := range converter.Conversions {
-		err = converter.Conversions[index].Setup()
-		if err != nil {
-			return
-		}
-
 		err = converter.Conversions[index].Test()
 		if err != nil {
 			return
@@ -226,7 +215,7 @@ func NewConverterFromYAML(raw []byte) (converter Converter, err error) {
 		return
 	}
 
-	err = converter.SetupAndTest()
+	err = converter.Test()
 	if err != nil {
 		converter = Converter{}
 		return
