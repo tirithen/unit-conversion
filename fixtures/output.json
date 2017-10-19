@@ -5,7 +5,8 @@
   "measurements": {
     "height": {
       "magnitude": 1.524,
-      "unit": "m"
+      "unit": "m",
+      "extraproperty": "will be kept without modification"
     },
     "weight": [
       {
