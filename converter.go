@@ -22,10 +22,27 @@ type ConversionTestFixture struct {
 
 // Conversion defines properties that describes how a value with one unit can be converted into a value in another unit with a formula
 type Conversion struct {
-	From         string                  `yaml:"from" validate:"required"`
-	To           string                  `yaml:"to" validate:"required"`
-	Formula      string                  `yaml:"formula" validate:"required"`
-	TestFixtures []ConversionTestFixture `yaml:"testFixtures" validate:"required,dive,required"`
+	From              string                         `yaml:"from" validate:"required"`
+	To                string                         `yaml:"to" validate:"required"`
+	Formula           string                         `yaml:"formula" validate:"required"`
+	FormulaExpression *govaluate.EvaluableExpression `yaml:"-"`
+	TestFixtures      []ConversionTestFixture        `yaml:"testFixtures" validate:"required,dive,required"`
+}
+
+// Setup should be run before using a Conversion
+func (conversion *Conversion) Setup() (err error) {
+	err = conversion.createExpressionFromFormula()
+	return
+}
+
+func (conversion *Conversion) createExpressionFromFormula() (err error) {
+	expression, err := govaluate.NewEvaluableExpression(conversion.Formula)
+	if err != nil {
+		return
+	}
+
+	conversion.FormulaExpression = expression
+	return
 }
 
 // Test runs the conversion with all defined test fixtures to verify that the conversion returnes the values expected
@@ -62,15 +79,17 @@ func (conversion *Conversion) Convert(input Quantity) (output Quantity, err erro
 		return
 	}
 
-	expression, err := govaluate.NewEvaluableExpression(conversion.Formula)
-	if err != nil {
-		return
+	if conversion.FormulaExpression == nil {
+		err = conversion.createExpressionFromFormula()
+		if err != nil {
+			return
+		}
 	}
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["magnitude"] = input.Magnitude
 
-	magnitude, err := expression.Evaluate(parameters)
+	magnitude, err := conversion.FormulaExpression.Evaluate(parameters)
 	if err != nil {
 		return
 	}
@@ -88,9 +107,14 @@ type Converter struct {
 	PathCache      map[string][]*Conversion
 }
 
-// Test tests that the converter and all it's conversions are in a good state
-func (converter *Converter) Test() (err error) {
+// SetupAndTest prepares each Conversion and tests that the converter and all it's conversions are in a good state
+func (converter *Converter) SetupAndTest() (err error) {
 	for index := range converter.Conversions {
+		err = converter.Conversions[index].Setup()
+		if err != nil {
+			return
+		}
+
 		err = converter.Conversions[index].Test()
 		if err != nil {
 			return
@@ -202,7 +226,7 @@ func NewConverterFromYAML(raw []byte) (converter Converter, err error) {
 		return
 	}
 
-	err = converter.Test()
+	err = converter.SetupAndTest()
 	if err != nil {
 		converter = Converter{}
 		return

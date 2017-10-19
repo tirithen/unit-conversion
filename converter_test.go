@@ -71,7 +71,6 @@ func TestConvertWithValidInput(test *testing.T) {
 	expectedOutput := Quantity{Magnitude: 1.1, Unit: "kg"}
 	conversion := Conversion{From: "g", To: "kg", Formula: "magnitude / 1000"}
 	output, err := conversion.Convert(input)
-
 	assert.NoError(test, err)
 	assert.Equal(test, expectedOutput, output)
 }
@@ -253,6 +252,8 @@ conversions:
 		},
 	}
 	output, err := NewConverterFromYAML([]byte(input))
+	output.Conversions[0].FormulaExpression = nil
+	output.Conversions[1].FormulaExpression = nil
 
 	assert.NoError(test, err)
 	assert.Equal(test, expectedOutput, output)
