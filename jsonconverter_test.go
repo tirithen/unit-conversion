@@ -34,3 +34,37 @@ func TestFailJSONConverterConvertToPreferredUnitsWithBadSyntax(test *testing.T) 
 	assert.NotEmpty(test, errors)
 	assert.Equal(test, expectedOutput, string(output))
 }
+
+func TestJSONConverterConvertToPreferredUnitsWithLargeDataSet(test *testing.T) {
+	input, err := ioutil.ReadFile("fixtures/inputLarge.json")
+	assert.NoError(test, err)
+	expectedOutput, err := ioutil.ReadFile("fixtures/outputLarge.json")
+	assert.NoError(test, err)
+	converterConfig, err := ioutil.ReadFile("converter.yml")
+	assert.NoError(test, err)
+	converter, err := NewJSONConverterFromYAML(converterConfig)
+	assert.NoError(test, err)
+
+	output, errors := converter.ConvertToPreferredUnits(string(input))
+	assert.Empty(test, errors)
+	assert.JSONEq(test, string(expectedOutput), output)
+}
+
+func BenchmarkJSONConverterConvertToPreferredUnitsLargeDataSet(benchmark *testing.B) {
+	input, err := ioutil.ReadFile("fixtures/inputLarge.json")
+	if err != nil {
+		panic(err)
+	}
+
+	converterConfig, err := ioutil.ReadFile("converter.yml")
+	if err != nil {
+		panic(err)
+	}
+
+	converter, err := NewJSONConverterFromYAML(converterConfig)
+	if err != nil {
+		panic(err)
+	}
+
+	converter.ConvertToPreferredUnits(string(input))
+}

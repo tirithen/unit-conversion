@@ -1,0 +1,162 @@
+[
+  {
+    "magnitude": 10,
+    "unit": "m"
+  },
+  {
+    "magnitude": 25.4,
+    "unit": "m"
+  },
+  {
+    "magnitude": 304.8,
+    "unit": "m"
+  },
+  {
+    "magnitude": 1,
+    "unit": "m"
+  },
+  {
+    "magnitude": 10,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.0254,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.3048,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.001,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.01,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.05588,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.67056,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.0022,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.022000000000000002,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.2032,
+    "unit": "m"
+  },
+  {
+    "magnitude": 2.4384,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.008,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.08,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.8128,
+    "unit": "m"
+  },
+  {
+    "magnitude": 9.7536,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.032,
+    "unit": "m"
+  },
+  {
+    "magnitude": 100,
+    "unit": "m"
+  },
+  {
+    "magnitude": 254,
+    "unit": "m"
+  },
+  {
+    "magnitude": 3048,
+    "unit": "m"
+  },
+  {
+    "magnitude": 10,
+    "unit": "m"
+  },
+  {
+    "magnitude": 100,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.254,
+    "unit": "m"
+  },
+  {
+    "magnitude": 3.048,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.01,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.1,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.51308,
+    "unit": "m"
+  },
+  {
+    "magnitude": 6.15696,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.0202,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.20199999999999999,
+    "unit": "m"
+  },
+  {
+    "magnitude": 2.032,
+    "unit": "m"
+  },
+  {
+    "magnitude": 24.384,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.08,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.8,
+    "unit": "m"
+  },
+  {
+    "magnitude": 8.128,
+    "unit": "m"
+  },
+  {
+    "magnitude": 97.536,
+    "unit": "m"
+  },
+  {
+    "magnitude": 0.32,
+    "unit": "m"
+  }
+]
