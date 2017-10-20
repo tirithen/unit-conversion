@@ -24,8 +24,8 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 		json.Unmarshal(rawNode, &node)
 
 		quantity := Quantity{}
-		hasMagnitude := false
-		hasUnit := false
+		foundMagnitude := false
+		foundUnit := false
 
 		for property, value := range node {
 			newPath := ""
@@ -45,15 +45,15 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 				magnitude, err := strconv.ParseFloat(string(value), 64)
 				if err == nil {
 					quantity.Magnitude = magnitude
-					hasMagnitude = true
+					foundMagnitude = true
 				}
 			} else if property == "unit" {
 				quantity.Unit = strings.Trim(string(value), "\"")
-				hasUnit = true
+				foundUnit = true
 			}
 		}
 
-		if hasMagnitude && hasUnit {
+		if foundMagnitude && foundUnit {
 			convertedQuantity, err := converter.ConvertToPreferredUnit(quantity)
 
 			if err == nil {
