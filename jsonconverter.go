@@ -27,10 +27,8 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 		hasUnit := false
 
 		for property, value := range node {
-			newPath := ""
-			if path == "" {
-				newPath = property
-			} else {
+			newPath := property
+			if path != "" {
 				newPath = path + "." + property
 			}
 
@@ -79,10 +77,8 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 		var node arrayNode
 		json.Unmarshal(rawNode, &node)
 		for index, value := range node {
-			newPath := ""
-			if path == "" {
-				newPath = strconv.Itoa(index)
-			} else {
+			newPath := strconv.Itoa(index)
+			if path != "" {
 				newPath = path + "." + strconv.Itoa(index)
 			}
 

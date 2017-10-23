@@ -211,15 +211,15 @@ func TestFailsConverterConvertWithBadConverions(test *testing.T) {
 func TestConversionsFromYAML(test *testing.T) {
 	input := `
 conversions:
-  - from: m
-    to: km
+  - from: km
+    to: m
     formula: magnitude * 1000
     testFixtures:
       - input: 1
         expected: 1000
 
-  - from: km
-    to: m
+  - from: m
+    to: km
     formula: magnitude / 1000
     testFixtures:
       - input: 1000
@@ -229,8 +229,8 @@ conversions:
 	expectedOutput := Converter{
 		Conversions: []Conversion{
 			Conversion{
-				From:    "m",
-				To:      "km",
+				From:    "km",
+				To:      "m",
 				Formula: "magnitude * 1000",
 				TestFixtures: []ConversionTestFixture{
 					ConversionTestFixture{
@@ -240,8 +240,8 @@ conversions:
 				},
 			},
 			Conversion{
-				From:    "km",
-				To:      "m",
+				From:    "m",
+				To:      "km",
 				Formula: "magnitude / 1000",
 				TestFixtures: []ConversionTestFixture{
 					ConversionTestFixture{
@@ -294,6 +294,46 @@ m:2#¤234
   `
 	expectedOutput := Converter{}
 	output, err := NewConverterFromYAML([]byte(input))
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestConvertToPreferredUnit(test *testing.T) {
+	input := Quantity{Magnitude: 1230, Unit: "m"}
+	expectedOutput := Quantity{Magnitude: 1.23, Unit: "km"}
+	converter := Converter{
+		PreferredUnits: []string{"km"},
+		Conversions: []Conversion{
+			Conversion{
+				From:    "m",
+				To:      "km",
+				Formula: "magnitude / 1000",
+				TestFixtures: []ConversionTestFixture{
+					ConversionTestFixture{
+						Input:    1000,
+						Expected: 1,
+					},
+				},
+			},
+		},
+	}
+
+	output, err := converter.ConvertToPreferredUnit(input)
+
+	assert.NoError(test, err)
+	assert.Equal(test, expectedOutput, output)
+}
+
+func TestFailConvertToPreferredUnitWithMissingConversion(test *testing.T) {
+	input := Quantity{Magnitude: 1230, Unit: "m"}
+	expectedOutput := Quantity{}
+	converter := Converter{
+		PreferredUnits: []string{"km"},
+		Conversions:    []Conversion{},
+	}
+
+	output, err := converter.ConvertToPreferredUnit(input)
 
 	assert.Error(test, err)
 	assert.Equal(test, expectedOutput, output)
