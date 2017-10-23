@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 
 	"github.com/tidwall/sjson"
 )
@@ -23,8 +24,8 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 		json.Unmarshal(rawNode, &node)
 
 		quantity := Quantity{}
-		hasMagnitude := false
-		hasUnit := false
+		foundMagnitude := false
+		foundUnit := false
 
 		for property, value := range node {
 			newPath := property
@@ -39,25 +40,18 @@ func (converter *JSONConverter) walkJSON(path string, rawNode json.RawMessage, i
 			}
 
 			if property == "magnitude" {
-				var valueInterface interface{}
-				json.Unmarshal(value, &valueInterface)
-				switch valueTyped := valueInterface.(type) {
-				case float64:
-					quantity.Magnitude = valueTyped
-					hasMagnitude = true
+				magnitude, err := strconv.ParseFloat(string(value), 64)
+				if err == nil {
+					quantity.Magnitude = magnitude
+					foundMagnitude = true
 				}
 			} else if property == "unit" {
-				var valueInterface interface{}
-				json.Unmarshal(value, &valueInterface)
-				switch valueTyped := valueInterface.(type) {
-				case string:
-					quantity.Unit = valueTyped
-					hasUnit = true
-				}
+				quantity.Unit = strings.Trim(string(value), "\"")
+				foundUnit = true
 			}
 		}
 
-		if hasMagnitude && hasUnit {
+		if foundMagnitude && foundUnit {
 			convertedQuantity, err := converter.ConvertToPreferredUnit(quantity)
 
 			if err == nil {

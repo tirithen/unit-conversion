@@ -22,10 +22,21 @@ type ConversionTestFixture struct {
 
 // Conversion defines properties that describes how a value with one unit can be converted into a value in another unit with a formula
 type Conversion struct {
-	From         string                  `yaml:"from" validate:"required"`
-	To           string                  `yaml:"to" validate:"required"`
-	Formula      string                  `yaml:"formula" validate:"required"`
-	TestFixtures []ConversionTestFixture `yaml:"testFixtures" validate:"required,dive,required"`
+	From              string                         `yaml:"from" validate:"required"`
+	To                string                         `yaml:"to" validate:"required"`
+	Formula           string                         `yaml:"formula" validate:"required"`
+	FormulaExpression *govaluate.EvaluableExpression `yaml:"-"`
+	TestFixtures      []ConversionTestFixture        `yaml:"testFixtures" validate:"required,dive,required"`
+}
+
+func (conversion *Conversion) createExpressionFromFormula() (err error) {
+	expression, err := govaluate.NewEvaluableExpression(conversion.Formula)
+	if err != nil {
+		return
+	}
+
+	conversion.FormulaExpression = expression
+	return
 }
 
 // Test runs the conversion with all defined test fixtures to verify that the conversion returnes the values expected
@@ -62,15 +73,17 @@ func (conversion *Conversion) Convert(input Quantity) (output Quantity, err erro
 		return
 	}
 
-	expression, err := govaluate.NewEvaluableExpression(conversion.Formula)
-	if err != nil {
-		return
+	if conversion.FormulaExpression == nil {
+		err = conversion.createExpressionFromFormula()
+		if err != nil {
+			return
+		}
 	}
 
 	parameters := make(map[string]interface{}, 8)
 	parameters["magnitude"] = input.Magnitude
 
-	magnitude, err := expression.Evaluate(parameters)
+	magnitude, err := conversion.FormulaExpression.Evaluate(parameters)
 	if err != nil {
 		return
 	}
