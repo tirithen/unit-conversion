@@ -50,6 +50,15 @@ func TestJSONConverterConvertToPreferredUnitsWithLargeDataSet(test *testing.T) {
 	assert.JSONEq(test, string(expectedOutput), output)
 }
 
+func TestNewJSONConverterFromYAML(test *testing.T) {
+	badConfig := "broken yaml¤-:4"
+	expectedOutput := JSONConverter{}
+	converter, err := NewJSONConverterFromYAML([]byte(badConfig))
+
+	assert.Error(test, err)
+	assert.Equal(test, expectedOutput, converter)
+}
+
 func BenchmarkNewJSONConverterFromYAMLLargeDataSet(benchmark *testing.B) {
 	converterConfig, err := ioutil.ReadFile("converter.yml")
 	if err != nil {
