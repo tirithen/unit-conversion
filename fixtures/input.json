@@ -11,7 +11,10 @@
     "weight": [
       {
         "magnitude": 154.323584,
-        "unit": "lb"
+        "unit": "lb",
+        "extra sub object": {
+          "should not hide parent object": true
+        }
       },
       {
         "magnitude": 71.6,
