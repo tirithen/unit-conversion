@@ -13,7 +13,8 @@
         "magnitude": 154.323584,
         "unit": "lb",
         "extra sub object": {
-          "should not hide parent object": true
+          "should not hide parent object": true,
+          "neither should sub sub object": {}
         }
       },
       {
